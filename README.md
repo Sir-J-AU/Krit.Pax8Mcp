@@ -66,7 +66,6 @@ Both Pax8 MCP auth paths are supported and can coexist:
 - **Idempotent**: re-running `Install-KritPax8Mcp` is always safe; backs up each agent config before edits.
 - **Auditable**: `Test-KritPax8Mcp` runs 7 gates and exits 0/1, ready to wire into a supervisor health pass.
 - **Brand-locked**: every operator-facing output starts with the canonical Kritical banner (`SirJ's Deaddrop` / `A Seriously Kritical™ Production`).
-- **No AI-agent badges**: nothing in this module exposes Claude / Hermes / Codex / Copilot / GPT branding. Authorship is Joshua Finley, Kritical Pty Ltd.
 
 ---
 
