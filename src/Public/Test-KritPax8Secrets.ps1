@@ -77,7 +77,8 @@ function Test-KritPax8Secrets {
 
     # S4 — warning only
     $s4 = Test-Path -LiteralPath $bannerPath
-    & $add 'S4.BannerAsset' $s4 (if ($s4) { $bannerPath } else { "not found at $bannerPath (will use bundled fallback)" })
+    $s4Detail = if ($s4) { $bannerPath } else { "not found at $bannerPath (will use bundled fallback)" }
+    & $add 'S4.BannerAsset' $s4 $s4Detail
 
     # S5 — secrets folder must NOT be inside a git repo (catastrophic-leak guard)
     $s5 = $true

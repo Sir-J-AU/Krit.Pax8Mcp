@@ -29,7 +29,7 @@
 -----------------------------------------------------------------
 ```
 
-**Author**: Joshua Finley — Kritical Pty Ltd — https://kritical.net
+**Author**: Joshua Finley — Kritical Pty Ltd — <https://kritical.net>
 **License**: see [LICENSE](./LICENSE)
 **Version**: 1.0.0
 
@@ -42,7 +42,7 @@ A single PowerShell module that wires the **Pax8 hosted MCP server** (`https://m
 Supported agents in v1.0.0:
 
 | Agent | Config file | Format |
-|---|---|---|
+| --- | --- | --- |
 | **Claude Code** (Anthropic) | `~/.claude.json` | JSON `mcpServers.pax8` |
 | **Codex CLI** (OpenAI) | `~/.codex/config.toml` | TOML `[mcp_servers.pax8]` |
 | **Cursor IDE** | `~/.cursor/mcp.json` | JSON `mcpServers.pax8` |
@@ -53,7 +53,7 @@ Supported agents in v1.0.0:
 Both Pax8 MCP auth paths are supported and can coexist:
 
 | Entry | Auth | First-use experience |
-|---|---|---|
+| --- | --- | --- |
 | `pax8` | Legacy `x-pax8-mcp-token` header (read from secrets folder) | Instant, no MFA |
 | `pax8-oauth` | OAuth 2.1 + PKCE + Dynamic Client Registration | Browser opens → Pax8 MFA → tokens cached |
 
@@ -79,7 +79,28 @@ $src = "$env:USERPROFILE\OneDrive - Kritical Pty Ltd\Github\Krit.Pax8Mcp\src"
 Import-Module "$src\Krit.Pax8Mcp.psd1" -Force
 ```
 
-### Option B — PSGallery (once published)
+### Option B — GitHub release (private repo today)
+
+```powershell
+# 1. Download the bundle
+$zip = Join-Path $env:TEMP 'Krit.Pax8Mcp-1.0.0.zip'
+gh release download v1.0.0 -R Sir-J-AU/Krit.Pax8Mcp -p '*.zip' -D $env:TEMP --clobber
+
+# 2. Resolve the correct PSModulePath entry (handles OneDrive-mapped Documents)
+$psMod = ($env:PSModulePath -split ';' |
+          Where-Object { $_ -match 'Documents\\PowerShell\\Modules$' } |
+          Select-Object -First 1)
+$instDir = Join-Path $psMod 'Krit.Pax8Mcp\1.0.0'
+
+# 3. Install + import + verify
+if (Test-Path -LiteralPath $instDir) { Remove-Item -LiteralPath (Split-Path $instDir -Parent) -Recurse -Force }
+Expand-Archive -LiteralPath $zip -DestinationPath $instDir -Force
+Import-Module Krit.Pax8Mcp -Force
+Test-KritPax8Secrets   # preflight — refuses if secrets folder isn't ready
+Test-KritPax8Mcp       # 7-gate health probe
+```
+
+### Option C — PSGallery (once published)
 
 ```powershell
 Install-Module Krit.Pax8Mcp -Scope CurrentUser
@@ -236,6 +257,7 @@ cd "$env:USERPROFILE\OneDrive - Kritical Pty Ltd\Github\Krit.Pax8Mcp"
 ```
 
 Covers:
+
 - Banner read/format/Title/Compact/fallback.
 - Token primitives: path joining, file presence, sane-length validation, trim handling.
 - Agent target enumeration (6 canonical agents).
@@ -249,6 +271,7 @@ Covers:
 ```
 
 Covers:
+
 - OAuth discovery endpoint returns valid metadata.
 - `initialize` handshake with token returns `pax8-mcp-server` identity.
 - `tools/list` returns ≥1 tool (currently 21).
@@ -269,7 +292,7 @@ See [docs/PUBLISHING.md](docs/PUBLISHING.md). High level:
 
 ## Files
 
-```
+```text
 Krit.Pax8Mcp/
 ├── README.md                                    ← this file
 ├── LICENSE
@@ -318,4 +341,4 @@ Krit.Pax8Mcp/
 
 - Hotline: +61 1300 274 655
 - Email: sales at kritical dot net
-- Web: https://kritical.net
+- Web: <https://kritical.net>

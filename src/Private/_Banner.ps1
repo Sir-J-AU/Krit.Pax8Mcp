@@ -2,12 +2,18 @@ function Get-KritPax8BannerCanonicalPath {
     [CmdletBinding()]
     [OutputType([string])]
     param()
-    # 1) Operator's secrets folder (preferred — verbatim source per Kritical brand rule)
-    $secrets = Join-Path $env:USERPROFILE 'OneDrive - Kritical Pty Ltd\Github-SecretsOutsideOfGitRepos\KriticalLogo.txt'
-    if (Test-Path -LiteralPath $secrets) { return $secrets }
-    # 2) Module-bundled fallback (for fresh installs / CI)
-    $bundled = Join-Path (Split-Path -Parent (Split-Path -Parent $PSCommandPath)) 'Assets/kritical-logo.txt'
-    if (Test-Path -LiteralPath $bundled) { return $bundled }
+    # Resolution order (first found wins):
+    # 1) Public Kritical-Branding folder (canonical home for the public banner)
+    # 2) Legacy secrets-folder location (backward compat — pre-1.1)
+    # 3) Module-bundled fallback (fresh installs / CI / non-Kritical machines)
+    $candidates = @(
+        (Join-Path $env:USERPROFILE 'OneDrive - Kritical Pty Ltd\Kritical-Branding\public\KriticalLogo.txt'),
+        (Join-Path $env:USERPROFILE 'OneDrive - Kritical Pty Ltd\Github-SecretsOutsideOfGitRepos\KriticalLogo.txt'),
+        (Join-Path (Split-Path -Parent (Split-Path -Parent $PSCommandPath)) 'Assets/kritical-logo.txt')
+    )
+    foreach ($p in $candidates) {
+        if (Test-Path -LiteralPath $p) { return $p }
+    }
     return $null
 }
 
