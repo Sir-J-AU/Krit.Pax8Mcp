@@ -1,0 +1,27 @@
+{
+  "UtcStamp": "20260624-091007Z",
+  "TotalTests": 26,
+  "PassedCount": 26,
+  "FailedCount": 0,
+  "SkippedCount": 0,
+  "NotRunCount": 0,
+  "Duration": {
+    "Ticks": 39027013,
+    "Days": 0,
+    "Hours": 0,
+    "Milliseconds": 902,
+    "Microseconds": 701,
+    "Nanoseconds": 300,
+    "Minutes": 0,
+    "Seconds": 3,
+    "TotalDays": 4.5170153935185185E-05,
+    "TotalHours": 0.0010840836944444444,
+    "TotalMilliseconds": 3902.7013,
+    "TotalMicroseconds": 3902701.3,
+    "TotalNanoseconds": 3902701300.0,
+    "TotalMinutes": 0.06504502166666666,
+    "TotalSeconds": 3.9027013
+  },
+  "Result": "Passed",
+  "XmlReportPath": "C:\\Users\\joshl\\OneDrive - Kritical Pty Ltd\\Github\\Krit.Pax8Mcp\\tests\\output\\results-20260624-091007Z.xml"
+}
