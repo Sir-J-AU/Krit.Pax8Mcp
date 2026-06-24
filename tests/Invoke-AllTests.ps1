@@ -12,7 +12,8 @@
 [CmdletBinding()]
 param(
     [switch] $SkipE2E,
-    [switch] $NoBanner
+    [switch] $NoBanner,
+    [string] $OutputDir
 )
 
 Set-StrictMode -Version Latest
@@ -32,8 +33,14 @@ if (-not $pester -or $pester.Version.Major -lt 5) {
 }
 Import-Module Pester -MinimumVersion 5.5.0 -Force
 
-$outDir = Join-Path $here 'output'
+# Default test output OUT of the repo so artefacts never accidentally commit.
+# Override with -OutputDir for CI / explicit collection.
+if (-not $OutputDir) {
+    $OutputDir = Join-Path $env:LOCALAPPDATA 'Kritical\Krit.Pax8Mcp\test-output'
+}
+$outDir = $OutputDir
 New-Item -ItemType Directory -Path $outDir -Force | Out-Null
+Write-Host ("Test artefacts -> " + $outDir) -ForegroundColor DarkGray
 $utc = (Get-Date).ToUniversalTime().ToString('yyyyMMdd-HHmmssZ')
 
 $paths = @((Join-Path $here 'Unit'))

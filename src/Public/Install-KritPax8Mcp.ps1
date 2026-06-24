@@ -69,6 +69,14 @@ function Install-KritPax8Mcp {
 
     if (-not $NoBanner.IsPresent) { Write-KritPax8Banner -Title 'Install Pax8 MCP' }
 
+    # Secrets preflight - fail fast BEFORE any agent config is touched
+    $preflight = Test-KritPax8Secrets -SecretsDir $SecretsDir -TokenFileName $TokenFileName -NoBanner
+    if (-not $preflight.Ok) {
+        Write-Host '--- Secrets preflight FAILED ---' -ForegroundColor Red
+        $preflight.Checks | Where-Object { -not $_.Pass } | Format-Table -AutoSize | Out-String | Write-Host
+        throw "Cannot install — secrets preflight failed ($($preflight.FailedCount) check(s)). No agent configs modified."
+    }
+
     $token = Read-KritPax8Token -SecretsDir $SecretsDir -TokenFileName $TokenFileName
     Write-Host ("Token loaded (length=" + $token.Length + " chars).") -ForegroundColor Green
 

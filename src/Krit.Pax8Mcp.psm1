@@ -36,8 +36,10 @@ Export-ModuleMember -Function @(
     'Install-KritPax8Mcp',
     'Get-KritPax8McpStatus',
     'Test-KritPax8Mcp',
+    'Test-KritPax8Secrets',
     'Update-KritPax8McpToken',
     'Remove-KritPax8Mcp',
+    'Clear-KritPax8IngestedLogs',
     'Write-KritPax8Banner',
     'Get-KritPax8Banner'
 )
