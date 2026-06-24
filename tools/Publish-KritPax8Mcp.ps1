@@ -109,15 +109,22 @@ if (-not $SkipDocCheck.IsPresent) {
 }
 
 # 1c. Full test suite gate (Pester unit + e2e) — refuse to publish on red
+# Isolate -WhatIf so it doesn't bleed into the test runner's file operations.
 if (-not $SkipTests.IsPresent) {
     Write-Host 'Running full test suite before publish...' -ForegroundColor DarkCyan
     $runner = Join-Path $RepoRoot 'tests\Invoke-AllTests.ps1'
     if (-not (Test-Path -LiteralPath $runner)) {
         throw "Test runner not found at $runner. Use -SkipTests to override (not recommended)."
     }
-    $testArgs = @('-NoBanner')
-    if ($SkipE2E.IsPresent) { $testArgs += '-SkipE2E' }
-    & $runner @testArgs
+    $testArgs = @{ NoBanner = $true }
+    if ($SkipE2E.IsPresent) { $testArgs.SkipE2E = $true }
+    $savedWhatIf = $WhatIfPreference
+    $WhatIfPreference = $false
+    try {
+        & $runner @testArgs
+    } finally {
+        $WhatIfPreference = $savedWhatIf
+    }
     if ($LASTEXITCODE -ne 0) {
         throw "Test suite FAILED (exit $LASTEXITCODE). Refusing to publish a red build. Use -SkipTests to override (NOT recommended)."
     }
