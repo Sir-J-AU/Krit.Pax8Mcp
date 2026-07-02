@@ -151,7 +151,13 @@ function Write-KritPax8TomlAgentConfig {
     )
     if ($RemoveOnly.IsPresent) {
         [System.IO.File]::WriteAllText($Path, $stripped.TrimEnd() + "`n", [System.Text.UTF8Encoding]::new($false))
-        return [pscustomobject]@{ Path=$Path; Backup=$bak; Tool='toml-regex'; Removed=$true }
+        return [pscustomobject]@{
+            Path       = $Path
+            Backup     = $bak
+            Tool       = 'toml-regex'
+            Removed    = $true
+            ResultLine = 'OK removed pax8'
+        }
     }
     $appendix = @"
 
@@ -161,7 +167,13 @@ url = "$McpEndpoint"
 "@
     $newContent = $stripped.TrimEnd() + "`n" + $appendix.TrimStart() + "`n"
     [System.IO.File]::WriteAllText($Path, $newContent, [System.Text.UTF8Encoding]::new($false))
-    return [pscustomobject]@{ Path=$Path; Backup=$bak; Tool='toml-regex'; Removed=$false }
+    return [pscustomobject]@{
+        Path       = $Path
+        Backup     = $bak
+        Tool       = 'toml-regex'
+        Removed    = $false
+        ResultLine = 'OK keys=pax8'
+    }
 }
 
 # --- Per-agent dispatcher ---
